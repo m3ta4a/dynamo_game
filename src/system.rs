@@ -37,6 +37,8 @@ impl System for MenuSystem {
     if input.esc_pressed {
       events.push(Event::ButtonPressed);
       state.game_state = GameState::Quitting;
+
+      input.esc_pressed = false;
     }
 
     if state.play_button.focused() && input.ui_down_pressed() {
@@ -68,6 +70,8 @@ impl System for PlaySystem {
       input.clear();
       events.push(Event::ButtonPressed);
       state.game_state = GameState::MainMenu;
+
+      input.esc_pressed = false;
     }
   }
 }
@@ -97,6 +101,8 @@ impl System for GameOverSystem {
     if input.esc_pressed {
       events.push(Event::ButtonPressed);
       state.game_state = GameState::Quitting;
+
+      input.esc_pressed = false;
     }
 
     let current_time = std::time::Instant::now();
