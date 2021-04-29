@@ -6,6 +6,7 @@ use dynamo_lib::renderer::render_text::{RenderText, TextRenderer, UNBOUNDED_F32}
 pub enum GameState {
   MainMenu,
   Playing,
+  Paused,
   GameOver,
   Quitting,
 }
@@ -28,7 +29,6 @@ impl GameText {
 pub struct State {
   pub game_state: GameState,
   pub player: Player,
-  // pub pellet: Pellet,
   pub title_text: GameText,
   pub play_button: GameText,
   pub quit_button: GameText,
@@ -113,10 +113,6 @@ impl State {
         geometry.push_quad(&quad);
       }
     }
-
-    // if self.pellet.visible {
-    //   geometry.push_quad(&self.pellet.quad);
-    // }
   }
 
   fn update_text(&self, text_renderer: &mut TextRenderer) {
@@ -132,6 +128,12 @@ impl State {
       if text.visible {
         text_renderer.push_render_text(text.render_text.clone());
       }
+    }
+  }
+
+  pub fn pause_game(&mut self) {
+    if self.game_state == GameState::Playing {
+      self.game_state = GameState::Paused;
     }
   }
 }

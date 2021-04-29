@@ -42,6 +42,7 @@ pub struct DynamoGame {
   menu_system: MenuSystem,
   visibility_system: VisibilitySystem,
   play_system: PlaySystem,
+  pause_system: PauseSystem,
   game_over_system: GameOverSystem,
   sound_pack: SoundPack,
 }
@@ -55,6 +56,7 @@ impl DynamoGame {
       menu_system: MenuSystem,
       visibility_system: VisibilitySystem,
       play_system: PlaySystem,
+      pause_system: PauseSystem,
       game_over_system: GameOverSystem::new(),
       sound_pack: SoundPack::new(),
     }
@@ -113,6 +115,11 @@ impl Game for DynamoGame {
           self.game_over_system.start(&mut self.state);
         }
       }
+      GameState::Paused => {
+        self
+          .pause_system
+          .update_state(&mut self.input, &mut self.state, &mut self.events);
+      }
       GameState::GameOver => {
         self
           .game_over_system
@@ -136,5 +143,12 @@ impl Game for DynamoGame {
 
   fn is_quitting(&self) -> bool {
     self.state.game_state == GameState::Quitting
+  }
+
+  fn focus_changed(&mut self, focus: bool) {
+    if !focus {
+      self.pause_system.start(&mut self.state);
+      self.state.pause_game();
+    }
   }
 }
